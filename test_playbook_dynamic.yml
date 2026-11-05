@@ -44,7 +44,6 @@ spec:
                   title: 🔐 var3
                   type: string
                   enum: [cool]
-                  default: cool
                   description: |
                     What is the person?
             # Condition B: If var1 is anything else, var3 can be typed freely or choose another enum
