@@ -46,7 +46,7 @@ spec:
                     const: Zach
               then:
                 properties:
-                  description:
+                  var3:
                     default: cool
     - title: Review & Confirm
       properties:
