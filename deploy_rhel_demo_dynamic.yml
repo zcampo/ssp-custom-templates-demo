@@ -192,45 +192,19 @@ spec:
         values:
           template: Linux Deployment SSP Demo
           extraVariables:
-            {%- if parameters.cpu %}
-            cpu: ${{ parameters.cpu }}
-            {%- endif %}
-            {%- if parameters.memory %}
-            memory: ${{ parameters.memory }}
-            {%- endif %}
-            {%- if parameters.add_disks and parameters.add_disks | length > 0 %}
-            add_disks: ${{ parameters.add_disks }}
-            {%- endif %}
-            {%- if parameters.enabled is defined %}
-            enabled: ${{ parameters.enabled }}
-            {%- endif %}
-            {%- if parameters.group %}
-            group: ${{ parameters.group }}
-            {%- endif %}
-            {%- if parameters.email and parameters.email | length > 0 %}
-            email: ${{ parameters.email }}
-            {%- endif %}
-            {%- if parameters.group_num %}
-            group_num: ${{ parameters.group_num }}
-            {%- endif %}
-            {%- if parameters.chg_bypass is defined %}
-            chg_bypass: ${{ parameters.chg_bypass }}
-            {%- endif %}
-            {%- if parameters.chg_bypass_just %}
-            chg_bypass_just: ${{ parameters.chg_bypass_just }}
-            {%- endif %}
-            {%- if parameters.chg_number %}
-            chg_number: ${{ parameters.chg_number }}
-            {%- endif %}
-            {%- if parameters.vcenter %}
-            vcenter: ${{ parameters.vcenter }}
-            {%- endif %}
-            {%- if parameters.cluster %}
-            cluster: ${{ parameters.cluster }}
-            {%- endif %}
-            {%- if parameters.vm_folder %}
-            vm_folder: ${{ parameters.vm_folder }}
-            {%- endif %}
+            cpu: ${{ parameters.cpu if parameters.cpu else omit }}
+            memory: ${{ parameters.memory if parameters.memory else omit }}
+            add_disks: ${{ parameters.add_disks if (parameters.add_disks and parameters.add_disks | length > 0) else omit }}
+            enabled: ${{ parameters.enabled if parameters.enabled is defined else omit }}
+            group: ${{ parameters.group if parameters.group else omit }}
+            email: ${{ parameters.email if (parameters.email and parameters.email | length > 0) else omit }}
+            group_num: ${{ parameters.group_num if parameters.group_num else omit }}
+            chg_bypass: ${{ parameters.chg_bypass if parameters.chg_bypass is defined else omit }}
+            chg_bypass_just: ${{ parameters.chg_bypass_just if parameters.chg_bypass_just else omit }}
+            chg_number: ${{ parameters.chg_number if parameters.chg_number else omit }}
+            vcenter: ${{ parameters.vcenter if parameters.vcenter else omit }}
+            cluster: ${{ parameters.cluster if parameters.cluster else omit }}
+            vm_folder: ${{ parameters.vm_folder if parameters.vm_folder else omit }}
             
   output:
     text:
