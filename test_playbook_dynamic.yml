@@ -29,10 +29,12 @@ spec:
             If you enter "Zach", var3 will change to cool
         var2:
           title: 🗂️ var2
+          type: string
           description: |
             default to "is"
         var3:
           title: 🔐 var3
+          type: string
           description: |
             What is the person?
       dependencies:
