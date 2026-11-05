@@ -79,23 +79,6 @@ spec:
           title: Bypass Change Creation?
           type: boolean
           default: false
-          
-        placementSubheader:
-          type: string
-          description: |
-            ### Placement Info
-            Please configure where to place this deployment in the fields below.
-          ui:field: DescriptionFieldTemplate # Hides the text input box completely
-
-        vcenter:
-          title: vCenter
-          type: string
-        cluster:
-          title: Cluster
-          type: string
-        vm_folder:
-          title: VM Folder
-          type: string
       dependencies:
         chg_bypass:
           allOf:
@@ -118,6 +101,23 @@ spec:
                 required:
                   - chg_bypass_just
                   - chg_number
+    - title: Placement Information
+      description: |
+        Please configure where to place this deployment.
+      required:
+        - vcenter
+        - cluster
+        - vm_folder
+      properties:
+        vcenter:
+          title: vCenter
+          type: string
+        cluster:
+          title: Cluster
+          type: string
+        vm_folder:
+          title: VM Folder
+          type: string
     - title: Review & Confirm
       properties:
         review:
