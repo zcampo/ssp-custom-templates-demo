@@ -1,0 +1,91 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: ssp-vars-demo-dynamic
+  title: SSP VARS DEMO DYNAMIC
+  description: >-
+    Change the variables conditionally
+  namespace: default
+  tags:
+    - testing
+spec:
+  type: service
+  presentation:
+    buttonLabels:
+      backButtonText: 'Return'
+      createButtonText: 'Update'
+      reviewButtonText: 'Verify'
+  parameters:
+    - title: Dynamic Vars!
+      required:
+        - var1
+        - var2
+        - var3
+      properties:
+        var1:
+          title: 🔑 var1
+          type: string
+          description: |
+            If you enter "Zach", var3 will change to cool
+        var2:
+          title: 🗂️ var2
+          description: |
+            default to "is"
+        var3:
+          title: 🔐 var3
+          description: |
+            What is the person?
+      dependencies:
+        - target: var3
+          allOf:
+            - if:
+                properties:
+                  var1:
+                    const: Zach
+              then:
+                properties:
+                  description:
+                    default: cool
+    - title: Review & Confirm
+      properties:
+        review:
+          type: string
+          title: 📝 Review Your Choices
+          description: |
+            Please review your selections before continuing.
+            After you click Update, your settings will be applied.
+          default: "If everything looks correct, click Update to start the process."
+  steps:
+    - id: review
+      name: Review Selections
+      action: debug:log
+      input:
+        message: |
+          Review
+          var1: ${{ parameters.var1 }}
+          var2: ${{ parameters.var2 }}
+          var3: ${{ parameters.var3 }}
+          
+    - id: launch-job
+      name: Update Time Servers
+      action: rhaap:launch-job-template
+      input:
+        token: ${{ parameters.token }}
+        values:
+          template: SSP VARS DEMO
+          extraVariables:
+            var1: ${{ parameters.var1 }}
+            var2: ${{ parameters.var2 }}
+            var3: ${{ parameters.var3 }}
+            
+  output:
+    text:
+      - title: Job Complete!
+        content: |
+          **Job ID:** ${{ steps['launch-job'].output.data.id }}
+          **Status:** ${{ steps['launch-job'].output.data.status }}
+
+          [View Details](${{ steps['launch-job'].output.data.url }})
+
+          ---
+          Thank you for using this form!
