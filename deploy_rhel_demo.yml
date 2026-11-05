@@ -3,6 +3,19 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: Hello world
+    - name: Debug all vars
       ansible.builtin.debug:
-        msg: "Hello world!"
+        msg:
+          cpu: "{{ cpu | default(omit) }}"
+          memory: "{{ memory | default(omit) }}"
+          add_disks: "{{ add_disks | default(omit) }}"
+          enabled: "{{ enabled | default('not_set') }}"
+          group: "{{ group | default(omit) }}"
+          email: "{{ email | default(omit) }}"
+          group_num: "{{ group_num | default(omit) }}"
+          chg_bypass: "{{ chg_bypass | default('not_set') }}"
+          chg_bypass_just: "{{ chg_bypass_just | default(omit) }}"
+          chg_number: "{{ chg_number | default(omit) }}"
+          vcenter: "{{ vcenter | default(omit) }}"
+          cluster: "{{ cluster | default(omit) }}"
+          vm_folder: "{{ vm_folder | default(omit) }}"
