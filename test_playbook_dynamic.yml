@@ -77,7 +77,7 @@ spec:
           var3: ${{ parameters.var3 }}
           
     - id: launch-job
-      name: Update Time Servers
+      name: run SSP VARS DEMO
       action: rhaap:launch-job-template
       input:
         token: ${{ parameters.token }}
