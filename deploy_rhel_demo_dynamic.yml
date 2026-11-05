@@ -1,0 +1,245 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: linux-deployment-ssp-demo-dynamic
+  title: 🐧 Linux Deployment SSP Demo
+  description: >-
+    Linux Deployment SSP Demo
+  namespace: default
+  tags:
+    - Linux
+    - Custom
+spec:
+  type: service
+  presentation:
+    buttonLabels:
+      backButtonText: 'Return'
+      createButtonText: 'Update'
+      reviewButtonText: 'Verify'
+  parameters:
+    - title: Hardware
+      required:
+        - cpu
+        - memory
+      properties:
+        cpu:
+          title: CPU
+          type: integer
+          default: 2
+          description: |
+            CPU
+        memory:
+          title: Memory (GB)
+          type: integer
+          default: 4
+          description: |
+            Memory (GB)
+        add_disks:
+          title: Additional Disks
+          type: string
+    - title: Deployment
+      required:
+        - enabled
+        - group
+        - email
+        - group_num
+        - vcenter
+        - cluster
+        - vm_folder
+      properties:
+        enabled:
+          title: Deployments Enabled
+          type: boolean
+          default: true
+        group:
+          title: Group
+          type: string
+          default: Group1
+          enum:
+            - Group1
+            - Group2
+            - Group3
+        email:
+          title: Email Address
+          type: array
+          minItems: 1
+          description: Please enter one or more valid corporate email addresses.
+          items:
+            type: string
+            format: email
+            minLength: 5
+            maxLength: 100
+          ui:options:
+            addableText: "Add another email"
+            orderable: false
+        group_num:
+          title: Group Number
+          type: string
+        chg_bypass:
+          title: Bypass Change Creation?
+          type: boolean
+          default: false
+        chg_bypass_just:
+          type: string
+        chg_number:
+          type: string
+          
+        placementSubheader:
+          type: string
+          description: |
+            ### Placement Info
+            Please configure where to place this deployment in the fields below.
+          ui:field: DescriptionFieldTemplate # Hides the text input box completely
+
+        vcenter:
+          title: vCenter
+          type: string
+        cluster:
+          title: Cluster
+          type: string
+        vm_folder:
+          title: VM Folder
+          type: string
+      dependencies:
+        chg_bypass:
+          allOf:
+            - if:
+                properties:
+                  chg_bypass:
+                    const: true
+              then:
+                # This injects the field into the UI only if chg_bypass is true
+                properties:
+                  chg_bypass_just:
+                    title: Bypass Change Creation Justification
+                    type: string
+                    description: Please provide a business justification for bypassing the change process.
+                  chg_number:
+                    title: Existing Change Number
+                    type: string
+                    description: |
+                      If no valid "Existing CHG" exists, please supply 'CHG00000000'.
+                required:
+                  - chg_bypass_just
+                  - chg_number
+    - title: Review & Confirm
+      properties:
+        review:
+          type: string
+          title: 📝 Review Your Choices
+          description: |
+            Please review your selections before continuing.
+            After you click Update, your settings will be applied.
+          default: "If everything looks correct, click Update to start the process."
+  steps:
+    - id: review
+      name: Review Selections
+      action: debug:log
+      input:
+        message: |
+          Review Hardware Details:
+          --------------------------
+          CPU: ${{ parameters.cpu }}
+          Memory (GB): ${{ parameters.memory }}
+          {%- if parameters.add_disks and parameters.add_disks | length > 0 %}
+          Additional Disks: ${{ parameters.add_disks }}
+          {%- endif %}
+          
+          Review Deployment Details:
+          --------------------------
+          {%- if parameters.enabled is defined %}
+          Deployments Enabled: ${{ 'Yes' if parameters.enabled else 'No' }}
+          {%- endif %}
+          {%- if parameters.group %}
+          Group: ${{ parameters.group }}
+          {%- endif %}
+          {%- if parameters.email and parameters.email | length > 0 %}
+          Email Addresses:
+            {%- for mail in parameters.email %}
+            - ${{ mail }}
+            {%- endfor %}
+          {%- endif %}
+          {%- if parameters.group_num %}
+          Group Number: ${{ parameters.group_num }}
+          {%- endif %}
+          {%- if parameters.chg_bypass is defined %}
+          Bypass Change Creation: ${{ 'Yes' if parameters.chg_bypass else 'No' }}
+          {%- endif %}
+          {%- if parameters.chg_bypass_just %}
+          Bypass Justification: ${{ parameters.chg_bypass_just }}
+          {%- endif %}
+          {%- if parameters.chg_number %}
+          Change Number: ${{ parameters.chg_number }}
+          {%- endif %}
+          
+          Placement Details:
+          --------------------------
+          {%- if parameters.vcenter %}
+          vCenter: ${{ parameters.vcenter }}
+          {%- endif %}
+          {%- if parameters.cluster %}
+          Cluster: ${{ parameters.cluster }}
+          {%- endif %}
+          {%- if parameters.vm_folder %}
+          VM Folder: ${{ parameters.vm_folder }}
+          {%- endif %}
+          
+    - id: launch-job
+      name: run Linux Deployment SSP Demo
+      action: rhaap:launch-job-template
+      input:
+        token: ${{ parameters.token }}
+        values:
+          template: Linux Deployment SSP Demo
+          extraVariables:
+            {%- if parameters.cpu %}
+            cpu: ${{ parameters.cpu }}
+            {%- endif %}
+            {%- if parameters.memory %}
+            memory: ${{ parameters.memory }}
+            {%- endif %}
+            {%- if parameters.add_disks and parameters.add_disks | length > 0 %}
+            add_disks: ${{ parameters.add_disks }}
+            {%- endif %}
+            {%- if parameters.enabled is defined %}
+            enabled: ${{ parameters.enabled }}
+            {%- endif %}
+            {%- if parameters.group %}
+            group: ${{ parameters.group }}
+            {%- endif %}
+            {%- if parameters.email and parameters.email | length > 0 %}
+            email: ${{ parameters.email }}
+            {%- endif %}
+            {%- if parameters.group_num %}
+            group_num: ${{ parameters.group_num }}
+            {%- endif %}
+            {%- if parameters.chg_bypass is defined %}
+            chg_bypass: ${{ parameters.chg_bypass }}
+            {%- endif %}
+            {%- if parameters.chg_bypass_just %}
+            chg_bypass_just: ${{ parameters.chg_bypass_just }}
+            {%- endif %}
+            {%- if parameters.chg_number %}
+            chg_number: ${{ parameters.chg_number }}
+            {%- endif %}
+            {%- if parameters.vcenter %}
+            vcenter: ${{ parameters.vcenter }}
+            {%- endif %}
+            {%- if parameters.cluster %}
+            cluster: ${{ parameters.cluster }}
+            {%- endif %}
+            {%- if parameters.vm_folder %}
+            vm_folder: ${{ parameters.vm_folder }}
+            {%- endif %}
+            
+  output:
+    text:
+      - title: Job Complete!
+        content: |
+          **Job ID:** ${{ steps['launch-job'].output.data.id }}
+          **Status:** ${{ steps['launch-job'].output.data.status }}
+
+          [View Details](${{ steps['launch-job'].output.data.url }})
+
+          ---
+          Thank you for using this form!
