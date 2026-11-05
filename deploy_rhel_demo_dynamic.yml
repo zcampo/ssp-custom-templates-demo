@@ -7,8 +7,8 @@ metadata:
     Linux Deployment SSP Demo
   namespace: default
   tags:
-    - Linux
-    - Custom
+    - linux
+    - custom
 spec:
   type: service
   presentation:
