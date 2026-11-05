@@ -16,6 +16,7 @@ spec:
       createButtonText: 'Update'
       reviewButtonText: 'Verify'
   parameters:
+    parameters:
     - title: Dynamic Vars!
       required:
         - var1
@@ -26,28 +27,35 @@ spec:
           title: 🔑 var1
           type: string
           description: |
-            If you enter "Zach", var3 will change to cool
+            Who are we talking about?
         var2:
           title: 🗂️ var2
           type: string
-          description: |
-            default to "is"
-        var3:
-          title: 🔐 var3
-          type: string
-          description: |
-            What is the person?
+          default: is
       dependencies:
-        - target: var3
-          allOf:
-            - if:
-                properties:
-                  var1:
+        var1:
+          oneOf:
+            # Condition A: If var1 is Zach, var3 can only be "cool"
+            - properties:
+                var1:
+                  const: Zach
+                var3:
+                  title: 🔐 var3
+                  type: string
+                  enum: [cool]
+                  default: cool
+                  description: |
+                    What is the person?
+            # Condition B: If var1 is anything else, var3 can be typed freely or choose another enum
+            - properties:
+                var1:
+                  not:
                     const: Zach
-              then:
-                properties:
-                  var3:
-                    default: cool
+                var3:
+                  title: 🔐 var3
+                  type: string
+                  description: |
+                    What is the person?
     - title: Review & Confirm
       properties:
         review:
