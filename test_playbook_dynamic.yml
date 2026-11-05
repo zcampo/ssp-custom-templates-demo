@@ -16,7 +16,6 @@ spec:
       createButtonText: 'Update'
       reviewButtonText: 'Verify'
   parameters:
-    parameters:
     - title: Dynamic Vars!
       required:
         - var1
