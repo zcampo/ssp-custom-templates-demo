@@ -1,6 +1,6 @@
 ---
 - name: test playbook
-  host: localhost
+  hosts: localhost
   connection: local
   tasks:
     - name: hello world
