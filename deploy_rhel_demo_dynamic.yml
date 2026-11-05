@@ -43,9 +43,6 @@ spec:
         - group
         - email
         - group_num
-        - vcenter
-        - cluster
-        - vm_folder
       properties:
         enabled:
           title: Deployments Enabled
