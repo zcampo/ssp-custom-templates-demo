@@ -141,48 +141,36 @@ spec:
           --------------------------
           CPU: ${{ parameters.cpu }}
           Memory (GB): ${{ parameters.memory }}
-          {%- if parameters.add_disks and parameters.add_disks | length > 0 %}
+          {% if parameters.add_disks %}
           Additional Disks: ${{ parameters.add_disks }}
-          {%- endif %}
-          
+          {% endif %}
+
           Review Deployment Details:
           --------------------------
-          {%- if parameters.enabled is defined %}
           Deployments Enabled: ${{ 'Yes' if parameters.enabled else 'No' }}
-          {%- endif %}
-          {%- if parameters.group %}
           Group: ${{ parameters.group }}
-          {%- endif %}
-          {%- if parameters.email and parameters.email | length > 0 %}
+
+          {% if parameters.email %}
           Email Addresses:
-            {%- for mail in parameters.email %}
-            - ${{ mail }}
-            {%- endfor %}
-          {%- endif %}
-          {%- if parameters.group_num %}
+          {% for mail in parameters.email %}
+          - ${{ mail }}
+          {% endfor %}
+          {% endif %}
+
           Group Number: ${{ parameters.group_num }}
-          {%- endif %}
-          {%- if parameters.chg_bypass is defined %}
+
           Bypass Change Creation: ${{ 'Yes' if parameters.chg_bypass else 'No' }}
-          {%- endif %}
-          {%- if parameters.chg_bypass_just %}
+
+          {% if parameters.chg_bypass %}
           Bypass Justification: ${{ parameters.chg_bypass_just }}
-          {%- endif %}
-          {%- if parameters.chg_number %}
           Change Number: ${{ parameters.chg_number }}
-          {%- endif %}
-          
+          {% endif %}
+
           Placement Details:
           --------------------------
-          {%- if parameters.vcenter %}
           vCenter: ${{ parameters.vcenter }}
-          {%- endif %}
-          {%- if parameters.cluster %}
           Cluster: ${{ parameters.cluster }}
-          {%- endif %}
-          {%- if parameters.vm_folder %}
           VM Folder: ${{ parameters.vm_folder }}
-          {%- endif %}
           
     - id: launch-job
       name: run Linux Deployment SSP Demo
