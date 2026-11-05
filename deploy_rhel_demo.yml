@@ -1,0 +1,8 @@
+---
+- name: Deploy RHEL demo
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Hello world
+      ansible.builtin.debug:
+        msg: "Hello world!"
