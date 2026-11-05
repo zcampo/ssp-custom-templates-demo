@@ -79,10 +79,6 @@ spec:
           title: Bypass Change Creation?
           type: boolean
           default: false
-        chg_bypass_just:
-          type: string
-        chg_number:
-          type: string
           
         placementSubheader:
           type: string
