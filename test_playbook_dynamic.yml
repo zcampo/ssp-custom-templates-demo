@@ -31,6 +31,8 @@ spec:
           title: 🗂️ var2
           type: string
           default: is
+        var3:
+          type: string
       dependencies:
         var1:
           oneOf:
