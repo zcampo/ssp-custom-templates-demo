@@ -36,7 +36,29 @@ spec:
             Memory (GB)
         add_disks:
           title: Additional Disks
-          type: string
+          type: array
+          description: Add one or more additional disks.
+          minItems: 0
+          items:
+            type: object
+            required:
+              - disk_name
+              - disk_size
+            properties:
+              disk_name:
+                title: Disk Name
+                type: string
+                description: Enter the disk name.
+              disk_size:
+                title: Disk Size (GB)
+                type: integer
+                minimum: 1
+                description: Enter disk size in GB.
+          ui:options:
+            addable: true
+            orderable: true
+            removable: true
+
     - title: Deployment
       required:
         - enabled
@@ -134,9 +156,16 @@ spec:
           --------------------------
           CPU: ${{ parameters.cpu }}
           Memory (GB): ${{ parameters.memory }}
-          {% if parameters.add_disks %}
-          Additional Disks: ${{ parameters.add_disks }}
+          {% if parameters.add_disks and parameters.add_disks | length > 0 %}
+          Additional Disks:
+          {% for disk in parameters.add_disks %}
+            - Disk Name: ${{ disk.disk_name }}
+              Disk Size: ${{ disk.disk_size }} GB
+          {% endfor %}
+          {% else %}
+          Additional Disks: None
           {% endif %}
+
 
           Review Deployment Details:
           --------------------------
@@ -175,7 +204,7 @@ spec:
           extraVariables:
             cpu: ${{ parameters.cpu }}
             memory: ${{ parameters.memory }}
-            add_disks: ${{ parameters.add_disks if (parameters.add_disks and parameters.add_disks | length > 0) else omit }}
+            add_disks: ${{ parameters.add_disks if parameters.add_disks and parameters.add_disks | length > 0 else omit }}
             enabled: ${{ parameters.enabled }}
             group: ${{ parameters.group }}
             email: ${{ parameters.email }}
