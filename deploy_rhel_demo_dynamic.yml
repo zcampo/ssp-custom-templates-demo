@@ -131,12 +131,58 @@ spec:
         vcenter:
           title: vCenter
           type: string
+          enum:
+            - vcenter1
+            - vcenter2
+          default: vcenter1
         cluster:
           title: Cluster
           type: string
         vm_folder:
           title: VM Folder
           type: string
+      dependencies:
+        vcenter:
+          allOf:
+            - if:
+                properties:
+                  vcenter:
+                    const: vcenter1
+              then:
+                properties:
+                  cluster:
+                    type: string
+                    title: Cluster
+                    enum:
+                      - Cluster1a
+                      - Cluster1b
+                  vm_folder:
+                    type: string
+                    title: VM Folder
+                    enum:
+                      - VM Folder 1a
+                      - VM Folder 1b
+                      - VM Folder 1c
+            - if:
+                properties:
+                  vcenter:
+                    const: vcenter2
+              then:
+                properties:
+                  cluster:
+                    type: string
+                    title: Cluster
+                    enum:
+                      - Cluster2a
+                      - Cluster2b
+                  vm_folder:
+                    type: string
+                    title: VM Folder
+                    enum:
+                      - VM Folder 2a
+                      - VM Folder 2b
+                      - VM Folder 2c
+                      
     - title: Review & Confirm
       properties:
         review:
@@ -226,12 +272,56 @@ spec:
             
   output:
     text:
-      - title: Job Complete!
+      - title: Linux Deployment - Job Complete!
         content: |
+          ## Deployment Results
+  
           **Job ID:** ${{ steps['launch-job'].output.data.id }}
           **Status:** ${{ steps['launch-job'].output.data.status }}
-
-          [View Details](${{ steps['launch-job'].output.data.url }})
-
+  
+          [View AAP Job Details](${{ steps['launch-job'].output.data.url }})
+  
           ---
-          Thank you for using this form!
+  
+          ## Hardware
+  
+          - CPU: ${{ parameters.cpu }}
+          - Memory: ${{ parameters.memory }} GB
+  
+          {% if parameters.add_disks and parameters.add_disks | length > 0 %}
+          **Additional Disks:**
+          {% for disk in parameters.add_disks %}
+          - {{ disk.disk_name }} — {{ disk.disk_size }} GB
+          {% endfor %}
+          {% else %}
+          - Additional Disks: None
+          {% endif %}
+  
+          ## Deployment
+  
+          - Enabled: ${{ parameters.enabled }}
+          - Group: ${{ parameters.group }}
+          - Group Number: ${{ parameters.group_num }}
+  
+          **Email Addresses:**
+          {% for mail in parameters.email %}
+          - {{ mail }}
+          {% endfor %}
+  
+          ## Change Management
+  
+          - Bypass Change: ${{ parameters.chg_bypass }}
+  
+          {% if parameters.chg_bypass %}
+          - Justification: ${{ parameters.chg_bypass_just }}
+          - Change Number: ${{ parameters.chg_number }}
+          {% endif %}
+  
+          ## Placement
+  
+          - vCenter: ${{ parameters.vcenter }}
+          - Cluster: ${{ parameters.cluster }}
+          - VM Folder: ${{ parameters.vm_folder }}
+  
+          ---
+          Thank you for using Linux Deployment SSP Demo!
