@@ -288,14 +288,9 @@ spec:
           - CPU: ${{ parameters.cpu }}
           - Memory: ${{ parameters.memory }} GB
   
-          {% if parameters.add_disks and parameters.add_disks | length > 0 %}
           **Additional Disks:**
-          {% for disk in parameters.add_disks %}
-          - {{ disk.disk_name }} — {{ disk.disk_size }} GB
-          {% endfor %}
-          {% else %}
-          - Additional Disks: None
-          {% endif %}
+
+          ${{ parameters.add_disks && parameters.add_disks.length > 0 ? parameters.add_disks.map(disk => disk.disk_name + ' — ' + disk.disk_size + ' GB').join('\n') : 'None' }}
   
           ## Deployment
   
@@ -304,9 +299,7 @@ spec:
           - Group Number: ${{ parameters.group_num }}
   
           **Email Addresses:**
-          {% for mail in parameters.email %}
-          - {{ mail }}
-          {% endfor %}
+          ${{ parameters.email.join('\n') }}
   
           ## Change Management
   
