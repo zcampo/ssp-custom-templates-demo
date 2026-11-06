@@ -144,55 +144,63 @@ spec:
           title: 📝 Review Your Choices
           description: |
             Please review your selections before continuing.
-            After you click Update, your settings will be applied.
-          default: "If everything looks correct, click Update to start the process."
+            After you click Next, your settings will be applied.
+          default: "If everything looks correct, click Next to start the process."
   steps:
+    
     - id: review
       name: Review Selections
       action: debug:log
       input:
         message: |
-          Review Hardware Details:
-          --------------------------
-          CPU: ${{ parameters.cpu }}
-          Memory (GB): ${{ parameters.memory }}
+          ========================================
+             LINUX DEPLOYMENT - CONFIGURATION
+          ========================================
+
+          HARDWARE
+          ----------------------------------------
+          CPU:                 ${{ parameters.cpu }}
+          Memory:              ${{ parameters.memory }} GB
           {% if parameters.add_disks and parameters.add_disks | length > 0 %}
           Additional Disks:
           {% for disk in parameters.add_disks %}
-            - Disk Name: ${{ disk.disk_name }}
-              Disk Size: ${{ disk.disk_size }} GB
+            - {{ disk.disk_name }} ({{ disk.disk_size }} GB)
           {% endfor %}
           {% else %}
-          Additional Disks: None
+          Additional Disks:    None
           {% endif %}
 
+          DEPLOYMENT
+          ----------------------------------------
+          Enabled:             ${{ 'Yes' if parameters.enabled else 'No' }}
+          Group:               ${{ parameters.group }}
+          Group Number:        ${{ parameters.group_num }}
 
-          Review Deployment Details:
-          --------------------------
-          Deployments Enabled: ${{ 'Yes' if parameters.enabled else 'No' }}
-          Group: ${{ parameters.group }}
-
-          {% if parameters.email %}
           Email Addresses:
           {% for mail in parameters.email %}
-          - ${{ mail }}
+            - {{ mail }}
           {% endfor %}
-          {% endif %}
 
-          Group Number: ${{ parameters.group_num }}
-
-          Bypass Change Creation: ${{ 'Yes' if parameters.chg_bypass else 'No' }}
-
+          CHANGE MANAGEMENT
+          ----------------------------------------
+          Bypass Change:       ${{ 'Yes' if parameters.chg_bypass else 'No' }}
           {% if parameters.chg_bypass %}
-          Bypass Justification: ${{ parameters.chg_bypass_just }}
-          Change Number: ${{ parameters.chg_number }}
+          Justification:       ${{ parameters.chg_bypass_just }}
+          Change Number:       ${{ parameters.chg_number }}
+          {% else %}
+          Justification:       N/A
+          Change Number:       N/A
           {% endif %}
 
-          Placement Details:
-          --------------------------
-          vCenter: ${{ parameters.vcenter }}
-          Cluster: ${{ parameters.cluster }}
-          VM Folder: ${{ parameters.vm_folder }}
+          PLACEMENT
+          ----------------------------------------
+          vCenter:             ${{ parameters.vcenter }}
+          Cluster:             ${{ parameters.cluster }}
+          VM Folder:           ${{ parameters.vm_folder }}
+
+          ========================================
+                  END OF CONFIGURATION
+          ========================================
           
     - id: launch-job
       name: run Linux Deployment SSP Demo
