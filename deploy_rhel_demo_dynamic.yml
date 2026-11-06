@@ -101,25 +101,25 @@ spec:
       dependencies:
         chg_bypass:
           oneOf:
-            - if:
-                properties:
-                  chg_bypass:
-                    const: true
-              then:
-                # This injects the field into the UI only if chg_bypass is true
-                properties:
-                  chg_bypass_just:
-                    title: Bypass Change Creation Justification
-                    type: string
-                    description: Please provide a business justification for bypassing the change process.
-                  chg_number:
-                    title: Existing Change Number
-                    type: string
-                    description: |
-                      If no valid "Existing CHG" exists, please supply 'CHG00000000'.
-                required:
-                  - chg_bypass_just
-                  - chg_number
+            - properties:
+                chg_bypass:
+                  const: false
+            - properties:
+                chg_bypass:
+                  const: true
+                chg_bypass_just:
+                  title: Bypass Change Creation Justification
+                  type: string
+                  description: Please provide a business justification for bypassing the change process.
+                chg_number:
+                  title: Existing Change Number
+                  type: string
+                  description: |
+                    If no valid "Existing CHG" exists, please supply 'CHG00000000'.
+              required:
+                - chg_bypass
+                - chg_bypass_just
+                - chg_number
     - title: Placement Information
       description: |
         Please configure where to place this deployment.
