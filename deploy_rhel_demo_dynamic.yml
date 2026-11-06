@@ -289,8 +289,7 @@ spec:
           - Memory: ${{ parameters.memory }} GB
   
           **Additional Disks:**
-
-          ${{ parameters.add_disks && parameters.add_disks.length > 0 ? parameters.add_disks.map(disk => disk.disk_name + ' — ' + disk.disk_size + ' GB').join('\n') : 'None' }}
+          ${{ parameters.add_disks | dump }}
   
           ## Deployment
   
@@ -299,7 +298,7 @@ spec:
           - Group Number: ${{ parameters.group_num }}
   
           **Email Addresses:**
-          ${{ parameters.email.join('\n') }}
+          ${{ parameters.email | dump }}
   
           ## Change Management
   
