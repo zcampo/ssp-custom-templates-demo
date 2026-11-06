@@ -100,7 +100,7 @@ spec:
           default: false
       dependencies:
         chg_bypass:
-          allOf:
+          oneOf:
             - if:
                 properties:
                   chg_bypass:
