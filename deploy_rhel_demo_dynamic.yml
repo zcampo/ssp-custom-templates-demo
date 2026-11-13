@@ -91,6 +91,10 @@ spec:
           ui:options:
             addableText: "Add another email"
             orderable: false
+        schedule:
+          title: Schedule Start
+          type: string
+          format: date-time
         group_num:
           title: Group Number
           type: string
