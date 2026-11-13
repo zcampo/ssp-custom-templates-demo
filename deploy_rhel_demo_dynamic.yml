@@ -95,6 +95,7 @@ spec:
           title: Schedule Start
           type: string
           format: date-time
+          ui:widget: datetime
         group_num:
           title: Group Number
           type: string
